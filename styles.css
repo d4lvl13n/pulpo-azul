@@ -1,0 +1,528 @@
+/* ═══════════════════════════════════════════════════════════
+   PULPO AZUL — « La Descente »
+   The page is one continuous body of water. Scroll = depth.
+   Background color is interpolated by script.js between the
+   depth stops below; everything here layers on that water.
+
+   v2 adds, at the bottom: dive light, Pulpo the buddy,
+   decompression stop, quote bubbles, the living seabed,
+   breath ritual, ascent toast, night dive, sound toggle.
+   ═══════════════════════════════════════════════════════════ */
+
+:root{
+  /* water column (top → bottom) — mirrored in script.js */
+  --w0:#FFEFC2; /* 0 m — surface sunlight */
+  --w1:#9FDDE4; /* 3 m — shallows */
+  --w2:#4FB3CE; /* 8 m — clear blue */
+  --w3:#1E6F9F; /* 14 m — open water */
+  --w4:#0E3D66; /* 19 m — deep */
+  --w5:#071F38; /* 24 m — seabed */
+
+  --sun:#FFC94A;  /* accent — reserved for giving */
+  --sun-ink:#3A2A00;
+  --ink-dark:#0B2E45;  /* text near the surface */
+  --ink-light:#F2FAFF; /* text at depth */
+  --sand:#E9D9AC;
+  --octo:#E8734A;      /* Pulpo */
+
+  --display:'Fraunces',Georgia,serif;
+  --body:'Atkinson Hyperlegible',system-ui,sans-serif;
+
+  --wrap:min(1080px,90vw);
+  --ease:cubic-bezier(.33,.02,.2,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+body{
+  font-family:var(--body);
+  font-size:1.06rem;
+  line-height:1.65;
+  color:var(--ink-dark);
+  /* static fallback: the full column as a gradient.
+     script.js swaps this for live interpolation when motion is allowed. */
+  background:linear-gradient(180deg,
+    var(--w0) 0%, var(--w1) 14%, var(--w2) 36%,
+    var(--w3) 58%, var(--w4) 80%, var(--w5) 100%);
+  overflow-x:hidden;
+}
+body.live{background:var(--w0)} /* JS drives the color from here on */
+
+::selection{background:var(--sun);color:var(--sun-ink)}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--sun);outline-offset:3px;border-radius:2px}
+
+.skip{
+  position:fixed;top:-52px;left:16px;z-index:60;background:var(--sun);color:var(--sun-ink);
+  padding:10px 16px;font-weight:700;text-decoration:none;border-radius:4px;transition:top .15s;
+}
+.skip:focus{top:16px}
+
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ─────────────── depth meter (fixed nav) ─────────────── */
+.depth-meter{
+  position:fixed;left:clamp(10px,2.4vw,34px);top:50%;translate:0 -50%;
+  z-index:50;display:flex;flex-direction:column;gap:14px;align-items:flex-start;
+  color:var(--ink-light);mix-blend-mode:normal;
+}
+.dm-rail{position:relative;width:2px;height:34vh;background:rgba(255,255,255,.28);border-radius:2px}
+.dm-cursor{position:absolute;left:-3px;top:0;width:8px;height:8px;border-radius:50%;background:var(--sun)}
+.dm-read{
+  font-family:var(--body);font-weight:700;font-size:.8rem;letter-spacing:.08em;
+  font-variant-numeric:tabular-nums;opacity:.9;
+}
+.depth-meter ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.depth-meter a{
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+  opacity:.55;transition:opacity .25s;
+}
+.depth-meter a:hover,.depth-meter a.active{opacity:1}
+/* near the surface the meter must read dark */
+.depth-meter.on-light{color:var(--ink-dark)}
+.depth-meter.on-light .dm-rail{background:rgba(11,46,69,.25)}
+@media(max-width:820px){
+  .depth-meter{top:auto;bottom:14px;left:50%;translate:-50% 0;flex-direction:row;align-items:center;gap:10px}
+  .dm-rail{width:26vw;height:2px}
+  .dm-cursor{top:-3px;left:0}
+  .depth-meter ul{display:none}
+}
+
+/* v2 — toggles living in the meter (night dive, ambient sound) */
+.dm-toggle{
+  background:none;border:1.5px solid currentColor;border-radius:50%;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:inherit;opacity:.55;transition:opacity .25s,border-color .25s,color .25s;padding:0;
+}
+.dm-toggle:hover{opacity:1}
+.dm-toggle[aria-pressed="true"]{opacity:1;border-color:var(--sun);color:var(--sun)}
+.dm-toggle svg{width:16px;height:16px}
+
+/* ─────────────── ambient: light rays & bubbles ─────────────── */
+.rays{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:1}
+.rays i{
+  position:absolute;top:-12vh;height:70vh;width:9vw;
+  background:linear-gradient(180deg,rgba(255,244,200,.55),rgba(255,244,200,0));
+  transform:skewX(-14deg);border-radius:0 0 50% 50%;
+}
+.rays i:nth-child(1){left:18%}
+.rays i:nth-child(2){left:44%;height:58vh;width:6vw}
+.rays i:nth-child(3){left:70%;height:64vh;width:7vw}
+
+.bubbles{position:fixed;inset:0;pointer-events:none;z-index:1}
+.bubble{
+  position:absolute;bottom:-24px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.5);
+  background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.5),rgba(255,255,255,.06));
+  animation:rise linear infinite;
+}
+@keyframes rise{
+  from{transform:translateY(0) translateX(0)}
+  to{transform:translateY(-118vh) translateX(var(--sway,14px))}
+}
+@media(prefers-reduced-motion:reduce){
+  .bubble{animation:none;display:none}
+  .rays{position:absolute;height:100vh}
+}
+
+/* ─────────────── stations ─────────────── */
+.station{
+  position:relative;z-index:2;
+  min-height:92vh;display:flex;flex-direction:column;justify-content:center;
+  padding:16vh 0;
+}
+.wrap{width:var(--wrap);margin:0 auto;position:relative}
+.wrap-narrow{max-width:720px}
+
+[data-ink="dark"]{color:var(--ink-dark)}
+[data-ink="light"]{color:var(--ink-light)}
+
+.eyebrow{
+  font-size:.78rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  opacity:.7;margin-bottom:1.4rem;font-variant-numeric:tabular-nums;
+}
+h1,h2{
+  font-family:var(--display);
+  font-variation-settings:'SOFT' 100;
+  font-weight:900;line-height:1.02;letter-spacing:-.01em;
+}
+h1{font-size:clamp(2.9rem,8.4vw,6.4rem);margin-bottom:1.6rem}
+h2{font-size:clamp(2rem,5vw,3.6rem);margin-bottom:2.2rem}
+h3{font-family:var(--display);font-weight:600;font-size:1.3rem;margin:0.9rem 0 .5rem}
+
+.lede{font-size:clamp(1.1rem,1.8vw,1.35rem);max-width:34em;margin-bottom:2.4rem}
+
+/* reveal choreography — applied only when .live (JS) */
+body.live .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+body.live .reveal.in{opacity:1;transform:none}
+
+/* ─────────────── buttons ─────────────── */
+.actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  display:inline-block;text-decoration:none;font-weight:700;
+  padding:15px 28px;border-radius:999px;font-size:1rem;font-family:inherit;
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease);
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-sun{
+  background:var(--sun);color:var(--sun-ink);
+  box-shadow:0 6px 22px rgba(255,201,74,.35);
+}
+.btn-sun:hover{box-shadow:0 10px 28px rgba(255,201,74,.5)}
+.btn-ghost{border:2px solid currentColor;background:transparent;color:inherit;cursor:pointer}
+.btn-big{padding:19px 40px;font-size:1.12rem}
+
+/* ─────────────── surface ─────────────── */
+.surface{min-height:100vh;padding-bottom:0}
+.waterline{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:clamp(40px,7vw,90px)}
+.waterline path{fill:rgba(255,255,255,.35)}
+
+/* ─────────────── voyage (les sorties) ─────────────── */
+.voyage{
+  list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,4vw,56px);
+}
+.voyage li{max-width:34ch}
+.pict{width:56px;height:56px}
+.pict .pk{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:760px){.voyage{grid-template-columns:1fr}}
+
+/* ─────────────── mission ─────────────── */
+.statement{
+  font-family:var(--display);font-variation-settings:'SOFT' 100;
+  font-weight:600;font-size:clamp(1.6rem,3.6vw,2.7rem);line-height:1.25;
+}
+.statement em{
+  display:block;margin-top:1.2rem;font-style:normal;font-weight:400;
+  font-size:clamp(1.05rem,1.9vw,1.35rem);font-family:var(--body);opacity:.9;
+}
+.octopus-slot{margin-top:3rem;display:flex;justify-content:flex-end}
+.octopus-slot svg{width:clamp(120px,16vw,190px);height:auto}
+.octo-arm{transform-origin:50% 20%}
+.octo-wave{transform-box:fill-box;transform-origin:50% 0%}
+body.live .octo-wave{animation:wave 3.6s ease-in-out infinite}
+@keyframes wave{0%,100%{rotate:0deg}50%{rotate:12deg}}
+@media(prefers-reduced-motion:reduce){body.live .octo-wave{animation:none}}
+
+/* ─────────────── soutenir ─────────────── */
+.tiers{list-style:none;display:flex;flex-direction:column;gap:0;margin-bottom:2.6rem;max-width:640px}
+.tiers li{
+  display:flex;align-items:baseline;gap:1.4rem;
+  padding:1.1rem 0;border-bottom:1px solid rgba(255,255,255,.22);
+}
+.tiers .amount{
+  font-family:var(--display);font-weight:900;font-variation-settings:'SOFT' 100;
+  font-size:clamp(1.6rem,3vw,2.3rem);min-width:3.4em;font-variant-numeric:tabular-nums;
+}
+.tier-hero .amount{color:var(--sun)}
+.tier-hero .what{font-weight:700}
+.fine{font-size:.92rem;opacity:.85;margin-top:1.2rem}
+.fine a{color:inherit}
+
+/* ─────────────── équipe ─────────────── */
+.facts{list-style:none;margin-top:2rem;display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem 2.4rem}
+.facts li{display:flex;flex-direction:column;gap:.15rem;border-left:2px solid rgba(255,255,255,.3);padding-left:1rem}
+.facts span{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+.facts strong{font-size:1.05rem}
+.facts a{color:inherit}
+@media(max-width:560px){.facts{grid-template-columns:1fr}}
+
+/* ─────────────── sponsors ─────────────── */
+.sponsor-row{
+  list-style:none;display:flex;gap:14px;flex-wrap:wrap;margin:2rem 0 2.4rem;
+}
+.sponsor-row li{
+  border:1.5px dashed rgba(255,255,255,.4);border-radius:10px;
+  padding:1.2rem 1.8rem;font-weight:700;opacity:.85;
+}
+
+/* ─────────────── seabed / footer ─────────────── */
+.seabed{min-height:70vh;justify-content:flex-end;padding-bottom:7vh;color:var(--ink-light)}
+.sand{position:absolute;left:0;right:0;top:0;width:100%;height:clamp(34px,5vw,70px)}
+.sand path{fill:rgba(233,217,172,.14)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.4rem;margin-bottom:3rem}
+.foot-mark{font-family:var(--display);font-weight:900;font-variation-settings:'SOFT' 100;font-size:1.7rem;margin-bottom:.6rem}
+.foot-h{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:.5rem}
+.legal{opacity:.55;font-size:.82rem}
+@media(max-width:760px){.footer-grid{grid-template-columns:1fr;gap:1.6rem}}
+
+/* ═══════════════════════════════════════════════════════════
+   DEPTH PASS — open water, silhouettes, snow, pressure
+   ═══════════════════════════════════════════════════════════ */
+
+/* open-water gaps: the emptiness between stations is what
+   makes the dive feel deep */
+.gap{
+  position:relative;z-index:2;min-height:72vh;
+  display:flex;align-items:center;justify-content:center;
+}
+.gap-tall{min-height:95vh}
+.gap-mark{
+  font-family:var(--body);font-weight:700;font-size:.74rem;
+  letter-spacing:.34em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);font-variant-numeric:tabular-nums;
+  user-select:none;
+}
+@media(max-width:820px){.gap{min-height:52vh}.gap-tall{min-height:66vh}}
+
+/* silhouettes — darker water, not objects */
+.decor{position:absolute;pointer-events:none;will-change:transform}
+.decor.left{left:0}
+.decor.right{right:0}
+.posidonia{bottom:-4vh;width:clamp(150px,20vw,260px)}
+.school{width:clamp(200px,26vw,360px);top:12%}
+.school.small{width:clamp(150px,20vw,260px)}
+.jelly{width:clamp(90px,11vw,150px);top:6%;left:8%}
+.rocks{left:0;right:0;bottom:0;width:100%;height:clamp(70px,11vw,160px)}
+
+.sil-shallow path{fill:none;stroke:rgba(10,62,72,.42);stroke-width:7;stroke-linecap:round}
+.sil-mid path{fill:rgba(6,34,58,.34);stroke:rgba(6,34,58,.34);stroke-width:4;stroke-linecap:round}
+.sil-mid path[d^="M48"],.sil-mid path[d^="M66"],.sil-mid path[d^="M84"],.sil-mid path[d^="M100"]{fill:none}
+.sil-deep path{fill:rgba(3,18,34,.5)}
+.sil-floor path{fill:rgba(3,16,30,.55)}
+
+/* fish drift slowly through the frame */
+body.live .school{animation:drift 26s ease-in-out infinite alternate}
+body.live .school.small{animation-duration:34s}
+@keyframes drift{from{translate:0 0}to{translate:-6vw 1.5vh}}
+body.live .jelly{animation:pulse 7s ease-in-out infinite}
+@keyframes pulse{0%,100%{translate:0 0}50%{translate:0 -2.4vh}}
+@media(prefers-reduced-motion:reduce){
+  body.live .school,body.live .jelly{animation:none}
+}
+
+/* marine snow — only visible at depth (opacity driven by JS) */
+.snow{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0}
+.flake{
+  position:absolute;top:-8px;border-radius:50%;
+  background:rgba(235,245,255,.5);
+  animation:sink linear infinite;
+}
+@keyframes sink{
+  from{transform:translateY(-4vh) translateX(0)}
+  to{transform:translateY(112vh) translateX(var(--sway,10px))}
+}
+@media(prefers-reduced-motion:reduce){.flake{display:none}}
+
+/* pressure vignette — the water closes in as you descend */
+.vignette{
+  position:fixed;inset:0;pointer-events:none;z-index:3;opacity:0;
+  background:radial-gradient(ellipse 118% 96% at 50% 44%,
+    transparent 58%, rgba(2,10,20,.55) 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SPONSORS PAGE — the surface, where things float
+   Static shallow-water page. No script.js needed.
+   ═══════════════════════════════════════════════════════════ */
+
+.page-sponsors{
+  background:linear-gradient(180deg,
+    var(--w0) 0%, #FFE8AE 18%, var(--w1) 55%, var(--w2) 100%);
+  color:var(--ink-dark);
+  min-height:100vh;
+}
+.surface-nav{
+  position:fixed;inset:0 0 auto 0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(16px,4vw,40px);
+}
+.surface-nav .back{
+  font-weight:700;text-decoration:none;font-size:1rem;color:var(--ink-dark);
+}
+.surface-nav .back:hover{text-decoration:underline}
+.btn-small{padding:11px 20px;font-size:.9rem}
+
+.sp-hero{padding:22vh 0 6vh}
+.sp-hero h1{font-size:clamp(2.6rem,7.4vw,5.6rem)}
+
+/* buoys: white floats holding the logos, ropes down into the water */
+.sp-fleet{position:relative;padding:6vh 0 16vh}
+.buoys{
+  list-style:none;display:flex;gap:clamp(20px,4vw,54px);
+  flex-wrap:wrap;align-items:flex-start;
+}
+.buoy{position:relative;display:flex;flex-direction:column;align-items:center}
+.buoy a{
+  display:flex;align-items:center;justify-content:center;
+  width:clamp(170px,22vw,250px);height:clamp(110px,14vw,160px);
+  background:#FFFDF6;border-radius:18px;padding:20px 24px;
+  box-shadow:0 10px 30px rgba(11,46,69,.16), inset 0 -6px 0 rgba(11,46,69,.06);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+.buoy a:hover{transform:translateY(-5px);box-shadow:0 16px 38px rgba(11,46,69,.22), inset 0 -6px 0 rgba(11,46,69,.06)}
+.buoy img{max-width:100%;max-height:100%;object-fit:contain}
+.rope{
+  width:2px;height:clamp(34px,6vh,64px);
+  background:repeating-linear-gradient(180deg,
+    rgba(11,46,69,.4) 0 6px, transparent 6px 11px);
+}
+/* gentle bobbing, each buoy on its own rhythm */
+.buoy:nth-child(1){animation:bob 5.2s ease-in-out infinite}
+.buoy:nth-child(2){animation:bob 6.4s ease-in-out infinite;animation-delay:-2.1s}
+.buoy:nth-child(3){animation:bob 5.8s ease-in-out infinite;animation-delay:-3.6s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-9px) rotate(.6deg)}}
+@media(prefers-reduced-motion:reduce){.buoy{animation:none!important}}
+
+.sp-fleet .waterline{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:clamp(40px,7vw,90px)}
+
+/* why sponsor */
+.sp-why{padding:10vh 0 14vh;color:var(--ink-dark)}
+.sp-points{list-style:none;display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2.6rem}
+.sp-points li{
+  border-left:3px solid var(--sun);padding-left:1.2rem;max-width:56ch;
+}
+.sp-points strong{display:block;font-family:var(--display);font-variation-settings:'SOFT' 100;
+  font-weight:600;font-size:1.18rem;margin-bottom:.2rem}
+
+/* footer on light water */
+.sp-foot{padding:8vh 0 5vh;color:var(--ink-dark)}
+.sp-foot .fine a{color:inherit}
+
+/* homepage sponsor logos: white chips readable on deep water */
+.sponsor-logos{gap:16px}
+.sponsor-logos li{border:none;padding:0;opacity:1}
+.sponsor-logos a{
+  display:flex;align-items:center;justify-content:center;
+  width:clamp(130px,15vw,180px);height:clamp(74px,8.5vw,104px);
+  background:#FFFDF6;border-radius:12px;padding:14px 18px;
+  box-shadow:0 8px 24px rgba(0,10,20,.3);
+  transition:transform .3s var(--ease);
+}
+.sponsor-logos a:hover{transform:translateY(-4px)}
+.sponsor-logos img{max-width:100%;max-height:100%;object-fit:contain}
+
+/* ═══════════════════════════════════════════════════════════
+   V2 — THE CRAFT LAYER
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── dive light: the cursor carries a lamp below ~12 m ── */
+.torch{
+  position:fixed;inset:0;pointer-events:none;z-index:4;opacity:0;
+  background:radial-gradient(circle 300px at var(--tx,50vw) var(--ty,42vh),
+    transparent 0, rgba(2,9,18,.62) 340px);
+}
+@media(pointer:coarse){
+  /* no cursor on touch: a soft, centered reading light instead */
+  .torch{background:radial-gradient(ellipse 95% 62% at 50% 40%,
+    transparent 42%, rgba(2,9,18,.5) 100%);}
+}
+
+/* ── breath ritual ── */
+.breath-overlay{
+  position:fixed;inset:0;z-index:70;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;
+  opacity:0;transition:opacity .5s;color:var(--ink-dark);
+}
+.breath-overlay.breathe{opacity:1}
+.breath-ring{width:120px;height:120px;border-radius:50%;border:3px solid currentColor;transform:scale(.55);opacity:.85}
+.breath-overlay.breathe .breath-ring{animation:inhale 1.9s var(--ease) forwards}
+@keyframes inhale{0%{transform:scale(.55);opacity:.9}70%{transform:scale(1.25);opacity:1}100%{transform:scale(1.32);opacity:0}}
+.breath-overlay p{font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:.85rem}
+
+/* ── quote bubbles: kids' voices floating in the gaps ── */
+.q-bubble{
+  position:absolute;left:var(--qb-x,50%);top:var(--qb-y,50%);z-index:3;
+  width:34px;height:34px;border-radius:50%;cursor:pointer;padding:0;
+  border:1.5px solid rgba(255,255,255,.65);
+  background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.6),rgba(255,255,255,.08));
+  animation:qbob 5s ease-in-out infinite;
+  transition:transform .25s var(--ease);
+}
+.q-bubble:hover{transform:scale(1.18)}
+@keyframes qbob{0%,100%{translate:0 0}50%{translate:0 -14px}}
+@media(prefers-reduced-motion:reduce){.q-bubble{animation:none}}
+.quote-pop{
+  position:fixed;z-index:80;max-width:280px;
+  background:rgba(4,20,36,.92);color:var(--ink-light);
+  border:1px solid rgba(255,255,255,.25);border-radius:14px;
+  padding:1rem 1.2rem;font-size:.95rem;line-height:1.5;
+  opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s;
+  backdrop-filter:blur(4px);
+}
+.quote-pop.show{opacity:1;transform:none}
+
+/* ── Pulpo, the dive buddy ── */
+.buddy{
+  position:fixed;left:0;top:0;z-index:45;
+  width:clamp(90px,10vw,140px);pointer-events:none;opacity:0;
+  will-change:transform;
+}
+.buddy svg{width:100%;height:auto;filter:drop-shadow(0 6px 14px rgba(0,10,20,.35))}
+.buddy.excited svg{animation:buddy-spin .9s var(--ease)}
+.buddy.excited .octo-blush{opacity:.55}
+@keyframes buddy-spin{0%{rotate:0deg}35%{rotate:-14deg}100%{rotate:360deg}}
+
+/* ── decompression stop ── */
+.deco-card{
+  position:fixed;left:50%;top:50%;translate:-50% -50%;z-index:75;
+  background:rgba(4,20,36,.94);color:var(--ink-light);
+  border:1px solid rgba(255,255,255,.2);border-radius:18px;
+  padding:2rem 2.2rem;max-width:min(420px,86vw);text-align:center;
+  opacity:0;pointer-events:none;transform:translateY(14px);
+  transition:opacity .4s,transform .4s;
+}
+.deco-card.show{opacity:1;pointer-events:auto;transform:none}
+.deco-ring{width:54px;height:54px;margin:0 auto 1rem;display:block}
+.deco-ring circle{
+  fill:none;stroke:var(--sun);stroke-width:4;stroke-linecap:round;
+  stroke-dasharray:151;stroke-dashoffset:151;
+  transform:rotate(-90deg);transform-origin:center;
+}
+.deco-card.show .deco-ring circle{animation:deco-count 3.4s linear forwards}
+@keyframes deco-count{to{stroke-dashoffset:0}}
+.deco-title{font-family:var(--display);font-weight:900;font-size:1.4rem;margin-bottom:.5rem}
+.deco-skip{
+  margin-top:1.2rem;background:none;border:1.5px solid rgba(255,255,255,.5);
+  color:inherit;border-radius:999px;padding:9px 18px;font:inherit;font-size:.85rem;cursor:pointer;
+}
+.deco-skip:hover{border-color:var(--sun);color:var(--sun)}
+
+/* ── the living seabed: one posidonia blade per donor ── */
+.meadow-block{margin-top:1rem}
+#meadow{display:block;width:100%;height:clamp(90px,15vw,200px);margin-bottom:-26px}
+.blade{
+  fill:none;stroke:rgba(64,160,120,.7);stroke-width:5;stroke-linecap:round;
+  transform-box:fill-box;transform-origin:50% 100%;
+  animation:sway 5s ease-in-out infinite alternate;
+}
+.blade-yours{stroke:var(--sun);filter:drop-shadow(0 0 6px rgba(255,201,74,.8))}
+@keyframes sway{from{transform:rotate(-3.5deg)}to{transform:rotate(3.5deg)}}
+@media(prefers-reduced-motion:reduce){.blade{animation:none}}
+.meadow-cap{font-size:.85rem;opacity:.75;margin:0 0 .4rem}
+.meadow-cap strong{font-variant-numeric:tabular-nums}
+
+/* ── ascent + toast ── */
+.ascent-wrap{margin:2.2rem auto 0}
+.toast{
+  position:fixed;left:50%;bottom:26px;translate:-50% 0;z-index:85;
+  background:rgba(4,20,36,.95);color:var(--ink-light);
+  border:1px solid rgba(255,255,255,.25);border-radius:14px;
+  padding:.9rem 1.3rem;font-size:.95rem;
+  display:flex;gap:.9rem;align-items:center;max-width:88vw;
+  opacity:0;pointer-events:none;transform:translateY(10px);
+  transition:opacity .4s,transform .4s;
+}
+.toast.show{opacity:1;pointer-events:auto;transform:none}
+.toast button{
+  background:var(--sun);color:var(--sun-ink);border:none;border-radius:999px;
+  padding:7px 14px;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap;
+}
+
+/* ── night dive ───────────────────────────────────────────
+   Auto after 21 h (or via the meter toggle). The water column
+   swaps in JS; here the details follow: plankton glows,
+   rays turn to moonbeams, ink flips light. */
+body.night{color:var(--ink-light)}
+body.night [data-ink="dark"]{color:var(--ink-light)}
+body.night .flake{background:rgba(160,255,230,.85);box-shadow:0 0 8px 2px rgba(120,255,220,.45)}
+body.night .rays i{background:linear-gradient(180deg,rgba(190,220,255,.28),rgba(190,220,255,0))}
+body.night .bubble{border-color:rgba(170,215,255,.5)}
+body.night .depth-meter{color:var(--ink-light)}
+body.night .depth-meter .dm-rail{background:rgba(255,255,255,.28)}
+body.night .waterline path{fill:rgba(160,200,255,.18)}
+body.night .q-bubble{border-color:rgba(170,215,255,.6)}
+body.night .breath-overlay{color:var(--ink-light)}
+body.night .gap-mark{color:rgba(200,225,255,.4)}
