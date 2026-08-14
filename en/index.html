@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulpo Azul — Sea trips for children</title>
+<meta name="description" content="Pulpo Azul takes children aged 8 to 12 out to sea to discover the Mediterranean and learn how to protect it. Support a trip.">
+<link rel="canonical" href="https://pulpo-azul.vercel.app/en/">
+<link rel="alternate" hreflang="fr" href="https://pulpo-azul.vercel.app/">
+<link rel="alternate" hreflang="ca" href="https://pulpo-azul.vercel.app/ca/">
+<link rel="alternate" hreflang="es" href="https://pulpo-azul.vercel.app/es/">
+<link rel="alternate" hreflang="en" href="https://pulpo-azul.vercel.app/en/">
+<link rel="alternate" hreflang="x-default" href="https://pulpo-azul.vercel.app/">
+
+<!-- social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pulpo Azul — Sea trips for children">
+<meta property="og:description" content="Chaque don finance directement a day at sea for one child. Plongez.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E3D66">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 6C18 6 12 20 12 32c0 8 6 12 20 12s20-4 20-12C52 20 46 6 32 6Z' fill='%23E8734A'/%3E%3Ccircle cx='25' cy='28' r='5' fill='white'/%3E%3Ccircle cx='39' cy='28' r='5' fill='white'/%3E%3Ccircle cx='26' cy='29' r='2.4' fill='%2312283A'/%3E%3Ccircle cx='38' cy='29' r='2.4' fill='%2312283A'/%3E%3Cg stroke='%23E8734A' stroke-width='4.5' stroke-linecap='round' fill='none'%3E%3Cpath d='M18 44c-3 6-7 9-11 11'/%3E%3Cpath d='M26 46c-1 6-3 9-6 12'/%3E%3Cpath d='M32 47v12'/%3E%3Cpath d='M38 46c1 6 3 9 6 12'/%3E%3Cpath d='M46 44c3 6 7 9 11 11'/%3E%3C/g%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NGO",
+  "name": "Pulpo Azul",
+  "description": "Pulpo Azul emmène des enfants de 8 à 12 ans en sortie en mer pour découvrir la Méditerranée et apprendre à la protéger.",
+  "email": "contact@pulpo-azul.org",
+  "telephone": "+34 681 309 818",
+  "nonprofitStatus": "NonprofitType"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Fraunces en axes complets : wght et SOFT sont animés par la pression (script.js) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,100..900,0..100&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<a class="skip" href="#soutenir">Go to support</a>
+
+<!-- depth meter nav -->
+<nav class="depth-meter" aria-label="Depth navigation">
+  <div class="dm-rail" aria-hidden="true"><i class="dm-cursor"></i></div>
+  <p class="dm-read" aria-hidden="true"><span id="dm-value">0</span>&nbsp;m</p>
+  <ul>
+    <li><a href="#surface">Surface</a></li>
+    <li><a href="#sorties">The trips</a></li>
+    <li><a href="#mission">The mission</a></li>
+    <li><a href="#soutenir">Support</a></li>
+    <li><a href="#equipe">The team</a></li>
+    <li><a href="#sponsors">Sponsors</a></li>
+  </ul>
+  <button class="dm-toggle" id="night-toggle" type="button" aria-pressed="false" aria-label="Night dive">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="dm-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Ambient sound">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor"/><path d="M16 9c1.4 1.6 1.4 4.4 0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</nav>
+
+<!-- ambient layers -->
+<div class="rays" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="bubbles" aria-hidden="true"></div>
+<div class="snow" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="torch" aria-hidden="true"></div>
+
+<!-- breath ritual overlay (driven by script.js) -->
+<div class="breath-overlay" aria-hidden="true">
+  <div class="breath-ring"></div>
+  <p>Breathe in…</p>
+</div>
+
+<main>
+
+  <!-- ═══ 0 m · SURFACE ═══ -->
+  <header class="station surface" id="surface" data-depth="0" data-ink="dark">
+    <div class="wrap">
+      <p class="eyebrow">Pulpo Azul · Association</p>
+      <h1>Discover<br>the Mediterranean.</h1>
+      <p class="lede">We take children aged 8 to 12&nbsp;out to sea to discover the Mediterranean and learn how to protect it.</p>
+      <div class="actions">
+        <a class="btn btn-sun" href="#soutenir">Support a trip</a>
+        <a class="btn btn-ghost" id="breath-btn" href="#sorties">Take a deep breath&nbsp;↓</a>
+      </div>
+    </div>
+    <svg class="waterline" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,45 C240,15 480,75 720,45 C960,15 1200,75 1440,45 L1440,90 L0,90 Z"/>
+    </svg>
+  </header>
+
+  <!-- open water 3 m -->
+  <div class="gap" aria-hidden="true">
+    <span class="gap-mark">— 3 m · Seagrass starts here</span>
+    <svg class="decor posidonia left" data-plx="0.14" viewBox="0 0 220 180">
+      <g class="sil-shallow">
+        <path d="M20 180 C24 120 12 90 26 40"/>
+        <path d="M48 180 C46 110 60 80 50 24"/>
+        <path d="M76 180 C82 130 70 96 84 52"/>
+        <path d="M108 180 C104 116 118 84 108 30"/>
+        <path d="M140 180 C146 126 134 98 148 58"/>
+        <path d="M170 180 C166 122 180 88 172 44"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ═══ 6 m · LES SORTIES ═══ -->
+  <section class="station" id="sorties" data-depth="6" data-ink="dark">
+    <div class="wrap">
+      <p class="eyebrow">— 6 m · The trips</p>
+      <h2>A day on board.</h2>
+      <ol class="voyage">
+        <li>
+          <svg class="pict" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="pk" d="M8 42 L56 42 L48 54 L16 54 Z"/>
+            <path class="pk" d="M32 10 L32 42 M32 14 L50 34 L32 34"/>
+          </svg>
+          <h3>Sail</h3>
+          <p>Board a real boat, learn seamanship, safety and wind, and watch the coast drift away.</p>
+        </li>
+        <li>
+          <svg class="pict" viewBox="0 0 64 64" aria-hidden="true">
+            <circle class="pk" cx="32" cy="28" r="16"/>
+            <path class="pk" d="M32 44 L32 54 M26 50 L38 50"/>
+            <circle class="pk" cx="26" cy="26" r="2.4"/>
+            <circle class="pk" cx="38" cy="26" r="2.4"/>
+          </svg>
+          <h3>Observe</h3>
+          <p>Put your head under water: seagrass meadows, fish and light. A whole world just metres from shore.</p>
+        </li>
+        <li>
+          <svg class="pict" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="pk" d="M32 54 C18 44 12 32 12 22 C12 14 18 10 24 12 C28 13 31 16 32 20 C33 16 36 13 40 12 C46 10 52 14 52 22 C52 32 46 44 32 54 Z"/>
+          </svg>
+          <h3>Protect</h3>
+          <p>Understand why this ecosystem is fragile, pick up what does not belong in the water, and leave wanting to care for it.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- open water 9 m -->
+  <div class="gap">
+    <span class="gap-mark" aria-hidden="true">— 9 m · Saupes swim in shoals</span>
+    <svg class="decor school right" data-plx="0.22" viewBox="0 0 320 140" aria-hidden="true">
+      <g class="sil-mid">
+        <path d="M20 30 C34 22 48 22 58 30 C48 38 34 38 20 30 Z M58 30 L72 22 L72 38 Z"/>
+        <path d="M90 60 C104 52 118 52 128 60 C118 68 104 68 90 60 Z M128 60 L142 52 L142 68 Z"/>
+        <path d="M50 96 C64 88 78 88 88 96 C78 104 64 104 50 96 Z M88 96 L102 88 L102 104 Z"/>
+        <path d="M160 40 C174 32 188 32 198 40 C188 48 174 48 160 40 Z M198 40 L212 32 L212 48 Z"/>
+        <path d="M190 90 C204 82 218 82 228 90 C218 98 204 98 190 90 Z M228 90 L242 82 L242 98 Z"/>
+        <path d="M250 58 C264 50 278 50 288 58 C278 66 264 66 250 58 Z M288 58 L302 50 L302 66 Z"/>
+      </g>
+    </svg>
+    <!-- COPY REVIEW : remplacer par de vraies paroles d'enfants recueillies en sortie -->
+    <button class="q-bubble" type="button" style="--qb-x:72%;--qb-y:60%"
+      data-quote="« J'ai vu un poisson plus grand que mon bras ! » — Léo, 9 ans">
+      <span class="sr-only">Lire une parole d'enfant</span>
+    </button>
+  </div>
+
+  <!-- ═══ 12 m · LA MISSION ═══ -->
+  <section class="station" id="mission" data-depth="12" data-ink="light">
+    <div class="wrap wrap-narrow">
+      <p class="eyebrow">— 12 m · The mission</p>
+      <p class="statement">We protect what we know.<br>
+        <em>Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.</em>
+      </p>
+      <div class="octopus-slot" data-octo aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- open water 15 m -->
+  <div class="gap gap-tall">
+    <span class="gap-mark" aria-hidden="true">— 15 m · Pélagie passe — on l'admire de loin</span>
+    <svg class="decor jelly left" data-plx="0.10" viewBox="0 0 140 200" aria-hidden="true">
+      <g class="sil-mid">
+        <path d="M30 60 C30 26 110 26 110 60 C110 76 96 82 70 82 C44 82 30 76 30 60 Z"/>
+        <path d="M48 84 C46 120 52 150 46 178"/>
+        <path d="M66 86 C66 126 60 154 66 186"/>
+        <path d="M84 86 C86 122 80 152 86 180"/>
+        <path d="M100 82 C102 114 96 140 102 168"/>
+      </g>
+    </svg>
+    <!-- COPY REVIEW : remplacer par de vraies paroles d'enfants recueillies en sortie -->
+    <button class="q-bubble" type="button" style="--qb-x:22%;--qb-y:64%"
+      data-quote="« En dessous, on entend juste son cœur. » — Mar, 11 ans">
+      <span class="sr-only">Lire une parole d'enfant</span>
+    </button>
+  </div>
+
+  <!-- ═══ 18 m · SOUTENIR ═══ -->
+  <section class="station" id="soutenir" data-depth="18" data-ink="light">
+    <div class="wrap">
+      <p class="eyebrow">— 18 m · Support</p>
+      <h2>Every donation directly<br>funds a trip.</h2>
+      <!-- COPY REVIEW montants d'exemple à confirmer avec l'association avant mise en ligne -->
+      <ul class="tiers">
+        <li><span class="amount">15&nbsp;€</span> <span class="what">a mask and snorkel for one child</span></li>
+        <li class="tier-hero"><span class="amount">35&nbsp;€</span> <span class="what">a day at sea for one child</span></li>
+        <li><span class="amount">150&nbsp;€</span> <span class="what">a full trip for a small group</span></li>
+      </ul>
+      <!-- COPY REVIEW remplacer par le lien de paiement réel (ex. Stripe Payment Link). -->
+      <a class="btn btn-sun btn-big" href="mailto:contact@pulpo-azul.org?subject=Don%20%E2%80%94%20Pulpo%20Azul">Donate</a>
+      <p class="fine">Vous préférez donner autrement, ou en parler d'abord&nbsp;? Écrivez-nous&nbsp;: <a href="mailto:contact@pulpo-azul.org">contact@pulpo-azul.org</a></p>
+    </div>
+  </section>
+
+  <!-- open water 21 m -->
+  <div class="gap">
+    <span class="gap-mark" aria-hidden="true">— 21 m · Ici, on n'entend plus que soi</span>
+    <svg class="decor school small left" data-plx="0.18" viewBox="0 0 320 140" aria-hidden="true">
+      <g class="sil-deep">
+        <path d="M40 40 C54 32 68 32 78 40 C68 48 54 48 40 40 Z M78 40 L92 32 L92 48 Z"/>
+        <path d="M120 76 C134 68 148 68 158 76 C148 84 134 84 120 76 Z M158 76 L172 68 L172 84 Z"/>
+        <path d="M200 50 C214 42 228 42 238 50 C228 58 214 58 200 50 Z M238 50 L252 42 L252 58 Z"/>
+      </g>
+    </svg>
+    <!-- COPY REVIEW : remplacer par de vraies paroles d'enfants recueillies en sortie -->
+    <button class="q-bubble" type="button" style="--qb-x:30%;--qb-y:56%"
+      data-quote="« Je veux être capitaine et protéger la mer. » — Iker, 8 ans">
+      <span class="sr-only">Lire une parole d'enfant</span>
+    </button>
+  </div>
+
+  <!-- ═══ 24 m · L'ÉQUIPE ═══ -->
+  <section class="station" id="equipe" data-depth="24" data-ink="light">
+    <div class="wrap wrap-narrow">
+      <p class="eyebrow">— 24 m · The team</p>
+      <h2>Who are we&nbsp;?</h2>
+      <p>Pulpo Azul is a non-profit association.
+      <!-- COPY REVIEW noms réels, numéro d'enregistrement de l'association, ville — indispensables pour la confiance des donateurs -->
+      It is led by sea-loving volunteers, trained to welcome children safely on board.</p>
+      <ul class="facts">
+        <li><span>Children welcomed</span><strong>8&nbsp;–&nbsp;12&nbsp;ans</strong></li>
+        <li><span>Supervision</span><strong>Trained volunteers</strong></li>
+        <li><span>Contact</span><strong><a href="mailto:contact@pulpo-azul.org">contact@pulpo-azul.org</a></strong></li>
+        <li><span>Téléphone</span><strong><a href="tel:+34681309818">+34&nbsp;681&nbsp;309&nbsp;818</a></strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- open water 27 m -->
+  <div class="gap" aria-hidden="true">
+    <span class="gap-mark">— 27 m · Almost at the seabed</span>
+  </div>
+
+  <!-- ═══ 29 m · SPONSORS ═══ -->
+  <section class="station" id="sponsors" data-depth="29" data-ink="light">
+    <div class="wrap wrap-narrow">
+      <p class="eyebrow">— 29 m · Sponsors</p>
+      <h2>They keep the project afloat.</h2>
+      <p>Entreprises locales, clubs nautiques, commerces&nbsp;: votre soutien permet d'inviter plus d'enfants à bord — et votre nom navigue avec nous.</p>
+      <!-- COPY REVIEW ajouter le nom de chaque sponsor (attribut alt) et le lien vers son site ; auto-héberger les logos -->
+      <ul class="sponsor-row sponsor-logos" aria-label="Sponsors">
+        <li><a href="sponsors.html"><img src="https://assets.zyrosite.com/mnl6R2EQo1H1bn44/logo-5adyG7wEvz85hzsQ.svg" alt="Logo sponsor" loading="lazy"></a></li>
+        <li><a href="sponsors.html"><img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,h=259,fit=crop/mnl6R2EQo1H1bn44/aalogofachada-e1711125251440-yWjIN7yBgq2GAFkK.png" alt="Logo sponsor" loading="lazy"></a></li>
+        <li><a href="sponsors.html"><img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,h=512,fit=crop/mnl6R2EQo1H1bn44/206754-3JVENDTygSha1PTE.png" alt="Logo sponsor" loading="lazy"></a></li>
+      </ul>
+      <div class="actions">
+        <a class="btn btn-ghost" href="sponsors.html">Voir nos sponsors&nbsp;→</a>
+        <a class="btn btn-ghost" href="mailto:contact@pulpo-azul.org?subject=Devenir%20sponsor%20%E2%80%94%20Pulpo%20Azul">Become a sponsor</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ 32 m · LE FOND ═══ -->
+<!-- data-donors : nombre de donateurs → brins de posidonie.
+     COPY REVIEW en production, script.js peut lire donors.json (webhook Stripe) à la place. -->
+<footer class="station seabed" data-depth="32" data-ink="light" data-donors="41">
+  <svg class="decor rocks" data-plx="0.06" viewBox="0 0 1440 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <g class="sil-floor">
+      <path d="M-20 160 C60 92 180 96 260 130 C330 158 380 150 430 160 Z"/>
+      <path d="M420 160 C500 110 620 104 720 136 C790 158 830 152 880 160 Z"/>
+      <path d="M900 160 C980 100 1120 96 1240 128 C1330 152 1400 148 1460 160 Z"/>
+      <path d="M150 160 C160 128 190 122 206 138 C218 150 230 152 240 160 Z"/>
+      <path d="M1050 160 C1060 120 1096 114 1116 134 C1130 148 1146 152 1160 160 Z"/>
+    </g>
+  </svg>
+  <svg class="sand" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,40 C260,10 520,60 780,32 C1040,8 1240,55 1440,30 L1440,70 L0,70 Z"/>
+  </svg>
+
+  <div class="wrap footer-grid">
+    <div>
+      <p class="foot-mark">Pulpo&nbsp;Azul</p>
+      <p class="fine">Sea trips for children,<br>and a better protected Mediterranean.</p>
+    </div>
+    <div>
+      <p class="foot-h">Contact</p>
+      <p class="fine"><a href="mailto:contact@pulpo-azul.org">contact@pulpo-azul.org</a><br>
+      <a href="tel:+34681309818">+34&nbsp;681&nbsp;309&nbsp;818</a></p>
+    </div>
+    <div>
+      <p class="foot-h">Languages</p>
+      <p class="fine language-links" aria-label="Choose a language"><a href="/" lang="fr">Français</a> · <a href="/ca/" lang="ca">Català</a> · <a href="/es/" lang="es">Español</a> · <a href="/en/" lang="en" aria-current="page">English</a></p>
+    </div>
+  </div>
+
+  <div class="wrap meadow-block">
+    <p class="meadow-cap"><strong id="meadow-count">41</strong> seagrass blades — one for each donor. Yours will shine here.</p>
+    <svg id="meadow" viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+  </div>
+
+  <div class="wrap ascent-wrap">
+    <button class="btn btn-ghost" id="ascent-btn" type="button">↑ Return to the surface</button>
+  </div>
+
+  <div class="wrap">
+    <!-- COPY REVIEW mentions légales réelles : forme juridique, n° d'enregistrement, siège -->
+    <p class="fine legal">© Pulpo Azul — Non-profit association.</p>
+  </div>
+</footer>
+
+<div class="toast" role="status" aria-live="polite"></div>
+
+<script src="../script.js"></script>
+</body>
+</html>

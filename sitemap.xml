@@ -6,4 +6,10 @@
   <url>
     <loc>https://pulpo-azul.vercel.app/sponsors.html</loc>
   </url>
+  <url><loc>https://pulpo-azul.vercel.app/ca/</loc></url>
+  <url><loc>https://pulpo-azul.vercel.app/ca/sponsors.html</loc></url>
+  <url><loc>https://pulpo-azul.vercel.app/es/</loc></url>
+  <url><loc>https://pulpo-azul.vercel.app/es/sponsors.html</loc></url>
+  <url><loc>https://pulpo-azul.vercel.app/en/</loc></url>
+  <url><loc>https://pulpo-azul.vercel.app/en/sponsors.html</loc></url>
 </urlset>
