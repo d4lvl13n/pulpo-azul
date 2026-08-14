@@ -220,6 +220,7 @@ body.live .octo-wave{animation:wave 3.6s ease-in-out infinite}
 .tier-hero .what{font-weight:700}
 .fine{font-size:.92rem;opacity:.85;margin-top:1.2rem}
 .fine a{color:inherit}
+.language-links a[aria-current="page"]{font-weight:700;text-decoration-thickness:2px;text-underline-offset:3px}
 
 /* ─────────────── équipe ─────────────── */
 .facts{list-style:none;margin-top:2rem;display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem 2.4rem}
