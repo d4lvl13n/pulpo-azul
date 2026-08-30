@@ -37,6 +37,17 @@ var body = document.body;
 var DAY_STOPS   = ['#FFEFC2', '#9FDDE4', '#4FB3CE', '#1E6F9F', '#0E3D66', '#071F38'];
 var NIGHT_STOPS = ['#101E3E', '#0E2A50', '#0D335A', '#0A2746', '#061830', '#030B18'];
 var MAX_DEPTH = 32;
+var langSwitch = document.querySelector('.lang-switch');
+
+/* ── UI strings, keyed by <html lang> (static pages under /ca, /es, /en) ── */
+var LANG = (document.documentElement.lang || 'fr').slice(0, 2);
+var STRINGS = {
+  fr: { decoTitle: 'Palier de décompression', decoText: 'Même les plongeurs pressés s\'arrêtent ici — trois secondes, le temps de regarder autour de soi.', decoSkip: 'Continuer la remontée', share: 'Partager', copied: 'Lien copié !', ascent: 'Belle remontée — le ciel vous attendait. Partagez la plongée ?', thanks: 'Merci ! Pulpo danse pour vous.' },
+  ca: { decoTitle: 'Parada de descompressió', decoText: 'Fins i tot els bussejadors amb pressa s\'aturen aquí: tres segons, el temps de mirar al voltant.', decoSkip: 'Continuar la pujada', share: 'Compartir', copied: 'Enllaç copiat!', ascent: 'Bona pujada: el cel t\'esperava. Comparteixes la immersió?', thanks: 'Gràcies! Pulpo balla per tu.' },
+  es: { decoTitle: 'Parada de descompresión', decoText: 'Hasta los buceadores con prisa se detienen aquí: tres segundos, el tiempo de mirar alrededor.', decoSkip: 'Continuar el ascenso', share: 'Compartir', copied: '¡Enlace copiado!', ascent: 'Buen ascenso: el cielo te esperaba. ¿Compartes la inmersión?', thanks: '¡Gracias! Pulpo baila para ti.' },
+  en: { decoTitle: 'Decompression stop', decoText: 'Even divers in a hurry stop here — three seconds, just long enough to look around.', decoSkip: 'Continue ascending', share: 'Share', copied: 'Link copied!', ascent: 'Nice ascent — the sky was waiting for you. Share the dive?', thanks: 'Thank you! Pulpo is dancing for you.' }
+};
+var T = STRINGS[LANG] || STRINGS.fr;
 
 var night = false;
 try {
@@ -211,9 +222,9 @@ decoCard.className = 'deco-card';
 decoCard.setAttribute('role', 'alert');
 decoCard.innerHTML =
   '<svg class="deco-ring" viewBox="0 0 54 54" aria-hidden="true"><circle cx="27" cy="27" r="24"/></svg>' +
-  '<p class="deco-title">Palier de décompression</p>' +
-  '<p>Même les plongeurs pressés s\'arrêtent ici — trois secondes, le temps de regarder autour de soi.</p>' +
-  '<button class="deco-skip" type="button">Continuer la remontée</button>';
+  '<p class="deco-title">' + T.decoTitle + '</p>' +
+  '<p>' + T.decoText + '</p>' +
+  '<button class="deco-skip" type="button">' + T.decoSkip + '</button>';
 var prevOverflow = '';
 
 function endDeco() {
@@ -314,11 +325,11 @@ function toast(msg, withShare) {
   if (withShare) {
     var b = document.createElement('button');
     b.type = 'button';
-    b.textContent = 'Partager';
+    b.textContent = T.share;
     b.addEventListener('click', function () {
       var data = { title: document.title, text: 'Plongez avec Pulpo Azul — des sorties en mer pour les enfants.', url: location.href.split(/[?#]/)[0] };
       if (navigator.share) { navigator.share(data).catch(function () {}); }
-      else if (navigator.clipboard) { navigator.clipboard.writeText(data.url); b.textContent = 'Lien copié !'; }
+      else if (navigator.clipboard) { navigator.clipboard.writeText(data.url); b.textContent = T.copied; }
     });
     toastEl.appendChild(b);
   }
@@ -365,7 +376,7 @@ function ascentWatch(t) {
   if (t > maxT) maxT = t;
   if (!ascentToasted && maxT > 0.97 && t < 0.03) {
     ascentToasted = true;
-    toast('Belle remontée — le ciel vous attendait. Partagez la plongée ?', true);
+    toast(T.ascent, true);
   }
 }
 
@@ -478,6 +489,7 @@ function update() {
 
   /* 4. meter legibility near the bright surface */
   meter.classList.toggle('on-light', !night && t < 0.12);
+  if (langSwitch) langSwitch.classList.toggle('on-light', !night && t < 0.12);
 
   /* 5. marine snow / 6. pressure vignette */
   snow.style.opacity = String(Math.max(0, Math.min(0.9, (t - 0.45) * 2.4)));
@@ -585,7 +597,7 @@ if (slot) slot.innerHTML = OCTO_SVG;
 if (/[?#&]merci/.test(location.href)) {
   try { localStorage.setItem('pulpo-donated', '1'); } catch (e) {}
   if (!reduced) partyUntil = Date.now() + 4500;
-  setTimeout(function () { toast('Merci ! Pulpo danse pour vous.', true); }, 900);
+  setTimeout(function () { toast(T.thanks, true); }, 900);
 }
 
 buildMeadow(parseInt((seabed && seabed.getAttribute('data-donors')) || '41', 10) || 41);

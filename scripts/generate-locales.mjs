@@ -46,7 +46,101 @@ const languages = {
 
 const alternates = (path) => ['fr', 'ca', 'es', 'en'].map((code) => `<link rel="alternate" hreflang="${code}" href="${origin}${code === 'fr' ? path : `/${code}${path}`}">`).join('\n') + `\n<link rel="alternate" hreflang="x-default" href="${origin}${path}">`;
 const languageLabels = { fr: 'Choisir une langue', ca: 'Tria una llengua', es: 'Elegir idioma', en: 'Choose a language' };
+const languageNames = { fr: 'Français', ca: 'Català', es: 'Español', en: 'English' };
+const langHref = (page, code) => (code === 'fr' ? page : `/${code}${page}`);
+const languageSwitch = (page, current) => `<nav class="lang-switch" aria-label="${languageLabels[current]}">` +
+  Object.entries(languageNames).map(([code, name]) => `<a href="${langHref(page, code)}" lang="${code}" hreflang="${code}" title="${name}"${current === code ? ' aria-current="page"' : ''}>${code.toUpperCase()}</a>`).join('') + '</nav>';
 const languageLinks = (page, current) => `<p class="fine language-links" aria-label="${languageLabels[current]}"><a href="${page}" lang="fr"${current === 'fr' ? ' aria-current="page"' : ''}>Français</a> · <a href="/ca${page}" lang="ca"${current === 'ca' ? ' aria-current="page"' : ''}>Català</a> · <a href="/es${page}" lang="es"${current === 'es' ? ' aria-current="page"' : ''}>Español</a> · <a href="/en${page}" lang="en"${current === 'en' ? ' aria-current="page"' : ''}>English</a></p>`;
+
+// Strings missed by the first pass (issue #1: French text left at the bottom of the localized pages).
+// Source strings use straight apostrophes — keep them straight here so they actually match.
+const extra = {
+  ca: [
+    ['<a href="#sponsors">Sponsors</a>', '<a href="#sponsors">Patrocinadors</a>'], ['— 29 m · Sponsors', '— 29 m · Patrocinadors'],
+    ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Cada sortida al mar planta una llavor&nbsp;: un infant que ha nedat sobre una praderia ja no la veurà mai més com un simple fons."],
+    ["Vous préférez donner autrement, ou en parler d'abord&nbsp;? Écrivez-nous&nbsp;:", "Prefereixes donar d'una altra manera o parlar-ne abans&nbsp;? Escriu-nos&nbsp;:"],
+    ["Entreprises locales, clubs nautiques, commerces&nbsp;: votre soutien permet d'inviter plus d'enfants à bord — et votre nom navigue avec nous.", "Empreses locals, clubs nàutics, comerços&nbsp;: el vostre suport permet convidar més infants a bord, i el vostre nom navega amb nosaltres."],
+    ['Voir nos sponsors&nbsp;→', 'Veure els patrocinadors&nbsp;→'],
+    ['Pulpo Azul · Association', 'Pulpo Azul · Associació'],
+    ["— 15 m · Pélagie passe — on l'admire de loin", "— 15 m · Passa una pelàgia — l'admirem de lluny"],
+    ["— 21 m · Ici, on n'entend plus que soi", "— 21 m · Aquí ja només s'escolta un mateix"],
+    ["« J'ai vu un poisson plus grand que mon bras ! » — Léo, 9 ans", "« He vist un peix més gran que el meu braç! » — Léo, 9 anys"],
+    ['« En dessous, on entend juste son cœur. » — Mar, 11 ans', '« A sota, només sents el teu cor. » — Mar, 11 anys'],
+    ['« Je veux être capitaine et protéger la mer. » — Iker, 8 ans', '« Vull ser capità i protegir el mar. » — Iker, 8 anys'],
+    ["Lire une parole d'enfant", "Llegir una frase d'un infant"],
+    ['<span>Contact</span>', '<span>Contacte</span>'], ['<span>Téléphone</span>', '<span>Telèfon</span>'],
+    ['<p class="foot-h">Contact</p>', '<p class="foot-h">Contacte</p>'],
+    ['aria-label="Sponsors"', 'aria-label="Patrocinadors"'], ['aria-label="Nos sponsors"', 'aria-label="Els nostres patrocinadors"'],
+    ['Site du sponsor', 'Web del patrocinador'], ['Logo sponsor', 'Logotip del patrocinador'],
+    ['Aller à devenir sponsor', 'Ves a fer-te patrocinador'], ['aria-label="Navigation"', 'aria-label="Navegació"'],
+    ['Sponsors · la surface', 'Patrocinadors · la superfície'],
+    ["Chaque sortie en mer a un coût&nbsp;: le bateau, le carburant, l'équipement, l'encadrement. Nos sponsors le rendent possible — et permettent d'inviter plus d'enfants à bord.", "Cada sortida al mar té un cost&nbsp;: el vaixell, el combustible, l'equipament i l'acompanyament. Els patrocinadors la fan possible i permeten convidar més infants a bord."],
+    ['Votre soutien finance directement des journées en mer pour des enfants de 8 à 12&nbsp;ans — pas des frais de structure.', 'El vostre suport finança directament dies al mar per a infants de 8 a 12&nbsp;anys, no despeses d\'estructura.'],
+    ['Votre logo sur cette page, sur nos supports, et associé à chaque sortie que vous rendez possible.', 'El vostre logotip en aquesta pàgina, als nostres materials i associat a cada sortida que feu possible.'],
+    ['Photos des sorties, bilan simple en fin de saison&nbsp;: de quoi montrer à vos clients et vos équipes ce que votre soutien a permis.', 'Fotos de les sortides i un balanç senzill a final de temporada&nbsp;: per mostrar als vostres clients i equips què ha permès el vostre suport.'],
+    ['Ou par téléphone&nbsp;:', 'O per telèfon&nbsp;:'],
+    ['Ils font flotter le projet : les sponsors de Pulpo Azul permettent d\'emmener plus d\'enfants en mer. Devenez sponsor.', 'Fan surar el projecte: els patrocinadors de Pulpo Azul permeten portar més infants al mar. Fes-te patrocinador.'],
+    ['Votre nom navigue avec nous : sponsorisez des journées en mer pour des enfants de 8 à 12 ans.', 'El teu nom navega amb nosaltres: patrocina dies al mar per a infants de 8 a 12 anys.'],
+    ['Chaque don finance directement une journée en mer pour un enfant. Plongez.', 'Cada donació finança directament un dia al mar per a un infant. Submergeix-te.'],
+    ['Pulpo Azul emmène des enfants de 8 à 12 ans en sortie en mer pour découvrir la Méditerranée et apprendre à la protéger.', 'Pulpo Azul porta infants de 8 a 12 anys a la mar per descobrir la Mediterrània i aprendre a protegir-la.']
+  ],
+  es: [
+    ['<a href="#sponsors">Sponsors</a>', '<a href="#sponsors">Patrocinadores</a>'], ['— 29 m · Sponsors', '— 29 m · Patrocinadores'],
+    ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Cada salida al mar planta una semilla&nbsp;: un niño que ha nadado sobre una pradera ya nunca la verá como un simple fondo."],
+    ["Vous préférez donner autrement, ou en parler d'abord&nbsp;? Écrivez-nous&nbsp;:", "¿Prefieres donar de otra forma o hablarlo antes? Escríbenos&nbsp;:"],
+    ["Entreprises locales, clubs nautiques, commerces&nbsp;: votre soutien permet d'inviter plus d'enfants à bord — et votre nom navigue avec nous.", "Empresas locales, clubes náuticos, comercios&nbsp;: vuestro apoyo permite invitar a más niños a bordo, y vuestro nombre navega con nosotros."],
+    ['Voir nos sponsors&nbsp;→', 'Ver nuestros patrocinadores&nbsp;→'],
+    ['Pulpo Azul · Association', 'Pulpo Azul · Asociación'],
+    ["— 15 m · Pélagie passe — on l'admire de loin", "— 15 m · Pasa una pelagia — la admiramos de lejos"],
+    ["— 21 m · Ici, on n'entend plus que soi", "— 21 m · Aquí ya solo te oyes a ti mismo"],
+    ["« J'ai vu un poisson plus grand que mon bras ! » — Léo, 9 ans", "« ¡Vi un pez más grande que mi brazo! » — Léo, 9 años"],
+    ['« En dessous, on entend juste son cœur. » — Mar, 11 ans', '« Debajo, solo oyes tu corazón. » — Mar, 11 años'],
+    ['« Je veux être capitaine et protéger la mer. » — Iker, 8 ans', '« Quiero ser capitán y proteger el mar. » — Iker, 8 años'],
+    ["Lire une parole d'enfant", "Leer una frase de un niño"],
+    ['<span>Contact</span>', '<span>Contacto</span>'], ['<span>Téléphone</span>', '<span>Teléfono</span>'],
+    ['<p class="foot-h">Contact</p>', '<p class="foot-h">Contacto</p>'],
+    ['aria-label="Sponsors"', 'aria-label="Patrocinadores"'], ['aria-label="Nos sponsors"', 'aria-label="Nuestros patrocinadores"'],
+    ['Site du sponsor', 'Web del patrocinador'], ['Logo sponsor', 'Logotipo del patrocinador'],
+    ['Aller à devenir sponsor', 'Ir a hacerse patrocinador'], ['aria-label="Navigation"', 'aria-label="Navegación"'],
+    ['Sponsors · la surface', 'Patrocinadores · la superficie'],
+    ["Chaque sortie en mer a un coût&nbsp;: le bateau, le carburant, l'équipement, l'encadrement. Nos sponsors le rendent possible — et permettent d'inviter plus d'enfants à bord.", "Cada salida al mar tiene un coste&nbsp;: el barco, el combustible, el equipo y el acompañamiento. Nuestros patrocinadores la hacen posible y permiten invitar a más niños a bordo."],
+    ['Votre soutien finance directement des journées en mer pour des enfants de 8 à 12&nbsp;ans — pas des frais de structure.', 'Vuestro apoyo financia directamente días en el mar para niños de 8 a 12&nbsp;años, no gastos de estructura.'],
+    ['Votre logo sur cette page, sur nos supports, et associé à chaque sortie que vous rendez possible.', 'Vuestro logotipo en esta página, en nuestros materiales y asociado a cada salida que hacéis posible.'],
+    ['Photos des sorties, bilan simple en fin de saison&nbsp;: de quoi montrer à vos clients et vos équipes ce que votre soutien a permis.', 'Fotos de las salidas y un balance sencillo a final de temporada&nbsp;: para mostrar a vuestros clientes y equipos lo que ha permitido vuestro apoyo.'],
+    ['Ou par téléphone&nbsp;:', 'O por teléfono&nbsp;:'],
+    ['Ils font flotter le projet : les sponsors de Pulpo Azul permettent d\'emmener plus d\'enfants en mer. Devenez sponsor.', 'Hacen flotar el proyecto: los patrocinadores de Pulpo Azul permiten llevar a más niños al mar. Hazte patrocinador.'],
+    ['Votre nom navigue avec nous : sponsorisez des journées en mer pour des enfants de 8 à 12 ans.', 'Tu nombre navega con nosotros: patrocina días en el mar para niños de 8 a 12 años.'],
+    ['Chaque don finance directement une journée en mer pour un enfant. Plongez.', 'Cada donación financia directamente un día en el mar para un niño. Sumérgete.'],
+    ['Pulpo Azul emmène des enfants de 8 à 12 ans en sortie en mer pour découvrir la Méditerranée et apprendre à la protéger.', 'Pulpo Azul lleva a niños de 8 a 12 años al mar para descubrir el Mediterráneo y aprender a protegerlo.']
+  ],
+  en: [
+    ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Every sea trip plants a seed: a child who has swum over a seagrass meadow will never again see it as just the seabed."],
+    ["Vous préférez donner autrement, ou en parler d'abord&nbsp;? Écrivez-nous&nbsp;:", "Prefer to give another way, or talk first? Write to us:"],
+    ["Entreprises locales, clubs nautiques, commerces&nbsp;: votre soutien permet d'inviter plus d'enfants à bord — et votre nom navigue avec nous.", "Local businesses, sailing clubs, shops: your support lets us welcome more children aboard — and your name sails with us."],
+    ['Voir nos sponsors&nbsp;→', 'See our sponsors&nbsp;→'],
+    ['Pulpo Azul · Association', 'Pulpo Azul · Non-profit'],
+    ["— 15 m · Pélagie passe — on l'admire de loin", "— 15 m · A jellyfish drifts by — admired from afar"],
+    ["— 21 m · Ici, on n'entend plus que soi", "— 21 m · Down here, all you hear is yourself"],
+    ["« J'ai vu un poisson plus grand que mon bras ! » — Léo, 9 ans", "“I saw a fish bigger than my arm!” — Léo, 9"],
+    ['« En dessous, on entend juste son cœur. » — Mar, 11 ans', '“Underneath, you only hear your heart.” — Mar, 11'],
+    ['« Je veux être capitaine et protéger la mer. » — Iker, 8 ans', '“I want to be a captain and protect the sea.” — Iker, 8'],
+    ["Lire une parole d'enfant", "Read what a child said"],
+    ['<span>Téléphone</span>', '<span>Phone</span>'],
+    ['aria-label="Nos sponsors"', 'aria-label="Our sponsors"'],
+    ['Site du sponsor', 'Sponsor website'], ['Logo sponsor', 'Sponsor logo'],
+    ['Aller à devenir sponsor', 'Go to become a sponsor'],
+    ['Sponsors · la surface', 'Sponsors · the surface'],
+    ["Chaque sortie en mer a un coût&nbsp;: le bateau, le carburant, l'équipement, l'encadrement. Nos sponsors le rendent possible — et permettent d'inviter plus d'enfants à bord.", "Every sea trip has a cost: the boat, fuel, equipment and supervision. Our sponsors make it possible — and let us welcome more children aboard."],
+    ['Votre soutien finance directement des journées en mer pour des enfants de 8 à 12&nbsp;ans — pas des frais de structure.', 'Your support directly funds days at sea for children aged 8 to 12 — not overheads.'],
+    ['Votre logo sur cette page, sur nos supports, et associé à chaque sortie que vous rendez possible.', 'Your logo on this page, on our materials, and tied to every trip you make possible.'],
+    ['Photos des sorties, bilan simple en fin de saison&nbsp;: de quoi montrer à vos clients et vos équipes ce que votre soutien a permis.', 'Photos from the trips and a simple end-of-season report: enough to show your customers and teams what your support made possible.'],
+    ['Ou par téléphone&nbsp;:', 'Or by phone:'],
+    ['Ils font flotter le projet : les sponsors de Pulpo Azul permettent d\'emmener plus d\'enfants en mer. Devenez sponsor.', 'They keep the project afloat: Pulpo Azul sponsors let us take more children to sea. Become a sponsor.'],
+    ['Votre nom navigue avec nous : sponsorisez des journées en mer pour des enfants de 8 à 12 ans.', 'Your name sails with us: sponsor days at sea for children aged 8 to 12.'],
+    ['Chaque don finance directement une journée en mer pour un enfant. Plongez.', 'Every donation directly funds a day at sea for a child. Dive in.'],
+    ['Pulpo Azul emmène des enfants de 8 à 12 ans en sortie en mer pour découvrir la Méditerranée et apprendre à la protéger.', 'Pulpo Azul takes children aged 8 to 12 out to sea to discover the Mediterranean and learn how to protect it.']
+  ]
+};
 
 async function localize(sourceFile, outputFile, locale, page) {
   let html = await readFile(sourceFile, 'utf8');
@@ -63,9 +157,11 @@ async function localize(sourceFile, outputFile, locale, page) {
     ]
   };
   for (const [from, to] of shared[outputFile.split('/')[0]]) html = html.replaceAll(from, to);
+  for (const [from, to] of extra[outputFile.split('/')[0]]) html = html.replaceAll(from, to);
   html = html.replace('<html lang="fr">', `<html lang="${outputFile.split('/')[0]}">`);
   html = html.replace(/<link rel="canonical" href="[^"]+">[\s\S]*?<link rel="alternate" hreflang="x-default" href="[^"]+">/, `<link rel="canonical" href="${origin}/${outputFile.replace('index.html', '')}">\n${alternates(page)}`);
   html = html.replace(/<p class="fine language-links"[\s\S]*?<\/p>/, languageLinks(page, outputFile.split('/')[0]));
+  html = html.replace(/<nav class="lang-switch"[\s\S]*?<\/nav>/, languageSwitch(page, outputFile.split('/')[0]));
   html = html.replace('href="styles.css"', 'href="../styles.css"').replace('src="script.js"', 'src="../script.js"');
   await mkdir(outputFile.split('/').slice(0, -1).join('/'), { recursive: true });
   await writeFile(outputFile, html);
