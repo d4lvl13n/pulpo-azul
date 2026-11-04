@@ -56,6 +56,7 @@ const languageLinks = (page, current) => `<p class="fine language-links" aria-la
 // Source strings use straight apostrophes — keep them straight here so they actually match.
 const extra = {
   ca: [
+    ["Siège&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registre des associations des Baléares&nbsp;: n°&nbsp;311000011901, Section&nbsp;1", "Seu&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registre d'associacions de les Illes Balears&nbsp;: núm.&nbsp;311000011901, Secció&nbsp;1"],
     ['<a href="#sponsors">Sponsors</a>', '<a href="#sponsors">Patrocinadors</a>'], ['— 29 m · Sponsors', '— 29 m · Patrocinadors'],
     ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Cada sortida al mar planta una llavor&nbsp;: un infant que ha nedat sobre una praderia ja no la veurà mai més com un simple fons."],
     ["Vous préférez donner autrement, ou en parler d'abord&nbsp;? Écrivez-nous&nbsp;:", "Prefereixes donar d'una altra manera o parlar-ne abans&nbsp;? Escriu-nos&nbsp;:"],
@@ -85,6 +86,7 @@ const extra = {
     ['Pulpo Azul emmène des enfants de 8 à 12 ans en sortie en mer pour découvrir la Méditerranée et apprendre à la protéger.', 'Pulpo Azul porta infants de 8 a 12 anys a la mar per descobrir la Mediterrània i aprendre a protegir-la.']
   ],
   es: [
+    ["Siège&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registre des associations des Baléares&nbsp;: n°&nbsp;311000011901, Section&nbsp;1", "Sede&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registro de asociaciones de las Islas Baleares&nbsp;: n.º&nbsp;311000011901, Sección&nbsp;1"],
     ['<a href="#sponsors">Sponsors</a>', '<a href="#sponsors">Patrocinadores</a>'], ['— 29 m · Sponsors', '— 29 m · Patrocinadores'],
     ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Cada salida al mar planta una semilla&nbsp;: un niño que ha nadado sobre una pradera ya nunca la verá como un simple fondo."],
     ["Vous préférez donner autrement, ou en parler d'abord&nbsp;? Écrivez-nous&nbsp;:", "¿Prefieres donar de otra forma o hablarlo antes? Escríbenos&nbsp;:"],
@@ -114,6 +116,7 @@ const extra = {
     ['Pulpo Azul emmène des enfants de 8 à 12 ans en sortie en mer pour découvrir la Méditerranée et apprendre à la protéger.', 'Pulpo Azul lleva a niños de 8 a 12 años al mar para descubrir el Mediterráneo y aprender a protegerlo.']
   ],
   en: [
+    ["Siège&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registre des associations des Baléares&nbsp;: n°&nbsp;311000011901, Section&nbsp;1", "Registered office&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Balearic Islands Register of Associations&nbsp;: no.&nbsp;311000011901, Section&nbsp;1"],
     ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Every sea trip plants a seed: a child who has swum over a seagrass meadow will never again see it as just the seabed."],
     ["Vous préférez donner autrement, ou en parler d'abord&nbsp;? Écrivez-nous&nbsp;:", "Prefer to give another way, or talk first? Write to us:"],
     ["Entreprises locales, clubs nautiques, commerces&nbsp;: votre soutien permet d'inviter plus d'enfants à bord — et votre nom navigue avec nous.", "Local businesses, sailing clubs, shops: your support lets us welcome more children aboard — and your name sails with us."],
