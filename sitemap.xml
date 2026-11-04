@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pulpo-azul.vercel.app/</loc>
+    <loc>https://www.pulpo-azul.org/</loc>
   </url>
   <url>
-    <loc>https://pulpo-azul.vercel.app/sponsors.html</loc>
+    <loc>https://www.pulpo-azul.org/sponsors.html</loc>
   </url>
-  <url><loc>https://pulpo-azul.vercel.app/ca/</loc></url>
-  <url><loc>https://pulpo-azul.vercel.app/ca/sponsors.html</loc></url>
-  <url><loc>https://pulpo-azul.vercel.app/es/</loc></url>
-  <url><loc>https://pulpo-azul.vercel.app/es/sponsors.html</loc></url>
-  <url><loc>https://pulpo-azul.vercel.app/en/</loc></url>
-  <url><loc>https://pulpo-azul.vercel.app/en/sponsors.html</loc></url>
+  <url><loc>https://www.pulpo-azul.org/ca/</loc></url>
+  <url><loc>https://www.pulpo-azul.org/ca/sponsors.html</loc></url>
+  <url><loc>https://www.pulpo-azul.org/es/</loc></url>
+  <url><loc>https://www.pulpo-azul.org/es/sponsors.html</loc></url>
+  <url><loc>https://www.pulpo-azul.org/en/</loc></url>
+  <url><loc>https://www.pulpo-azul.org/en/sponsors.html</loc></url>
 </urlset>

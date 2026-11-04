@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pulpo-azul.vercel.app/sitemap.xml
+Sitemap: https://www.pulpo-azul.org/sitemap.xml
