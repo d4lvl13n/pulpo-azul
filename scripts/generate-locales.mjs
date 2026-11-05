@@ -62,6 +62,8 @@ const languageLinks = (page, current) => `<p class="fine language-links" aria-la
 // Source strings use straight apostrophes — keep them straight here so they actually match.
 const extra = {
   ca: [
+    // Mail subjects of the donate / sponsor buttons (issue #5)
+    ['subject=Don%20%E2%80%94%20Pulpo%20Azul', 'subject=Donaci%C3%B3%20%E2%80%94%20Pulpo%20Azul'], ['subject=Devenir%20sponsor%20%E2%80%94%20Pulpo%20Azul', 'subject=Fes-te%20patrocinador%20%E2%80%94%20Pulpo%20Azul'],
     ["Siège&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registre des associations des Baléares&nbsp;: n°&nbsp;311000011901, Section&nbsp;1", "Seu&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registre d'associacions de les Illes Balears&nbsp;: núm.&nbsp;311000011901, Secció&nbsp;1"],
     ['<a href="#sponsors">Sponsors</a>', '<a href="#sponsors">Patrocinadors</a>'], ['— 29 m · Sponsors', '— 29 m · Patrocinadors'],
     ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Cada sortida al mar planta una llavor&nbsp;: un infant que ha nedat sobre una praderia ja no la veurà mai més com un simple fons."],
@@ -92,6 +94,8 @@ const extra = {
     ['Pulpo Azul, association basée à Alcúdia (Majorque), emmène des enfants de 8 à 12 ans en sortie en mer pour découvrir la Méditerranée et apprendre à la protéger.', 'Pulpo Azul, associació amb seu a Alcúdia (Mallorca), porta infants de 8 a 12 anys a la mar per descobrir la Mediterrània i aprendre a protegir-la.']
   ],
   es: [
+    // Mail subjects of the donate / sponsor buttons (issue #5)
+    ['subject=Don%20%E2%80%94%20Pulpo%20Azul', 'subject=Donaci%C3%B3n%20%E2%80%94%20Pulpo%20Azul'], ['subject=Devenir%20sponsor%20%E2%80%94%20Pulpo%20Azul', 'subject=Hazte%20patrocinador%20%E2%80%94%20Pulpo%20Azul'],
     ["Siège&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registre des associations des Baléares&nbsp;: n°&nbsp;311000011901, Section&nbsp;1", "Sede&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registro de asociaciones de las Islas Baleares&nbsp;: n.º&nbsp;311000011901, Sección&nbsp;1"],
     ['<a href="#sponsors">Sponsors</a>', '<a href="#sponsors">Patrocinadores</a>'], ['— 29 m · Sponsors', '— 29 m · Patrocinadores'],
     ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Cada salida al mar planta una semilla&nbsp;: un niño que ha nadado sobre una pradera ya nunca la verá como un simple fondo."],
@@ -122,6 +126,8 @@ const extra = {
     ['Pulpo Azul, association basée à Alcúdia (Majorque), emmène des enfants de 8 à 12 ans en sortie en mer pour découvrir la Méditerranée et apprendre à la protéger.', 'Pulpo Azul, asociación con sede en Alcúdia (Mallorca), lleva a niños de 8 a 12 años al mar para descubrir el Mediterráneo y aprender a protegerlo.']
   ],
   en: [
+    // Mail subjects of the donate / sponsor buttons (issue #5)
+    ['subject=Don%20%E2%80%94%20Pulpo%20Azul', 'subject=Donation%20%E2%80%94%20Pulpo%20Azul'], ['subject=Devenir%20sponsor%20%E2%80%94%20Pulpo%20Azul', 'subject=Become%20a%20sponsor%20%E2%80%94%20Pulpo%20Azul'],
     ["Siège&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Registre des associations des Baléares&nbsp;: n°&nbsp;311000011901, Section&nbsp;1", "Registered office&nbsp;: Calle Bisbe Pont, 4 – 07400 Alcúdia · NIF&nbsp;: G19754712 · Balearic Islands Register of Associations&nbsp;: no.&nbsp;311000011901, Section&nbsp;1"],
     ["Chaque sortie en mer plante une graine&nbsp;: un enfant qui a nagé au-dessus d'un herbier ne le regardera plus jamais comme un simple fond.", "Every sea trip plants a seed: a child who has swum over a seagrass meadow will never again see it as just the seabed."],
     ["Vous préférez donner autrement, ou en parler d'abord&nbsp;? Écrivez-nous&nbsp;:", "Prefer to give another way, or talk first? Write to us:"],
